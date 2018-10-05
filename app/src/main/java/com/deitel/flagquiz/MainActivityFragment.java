@@ -336,7 +336,7 @@ public class MainActivityFragment extends Fragment {
                         builder.setMessage(
                            getString(R.string.results,
                               totalGuesses,
-                              (1000 / (double) totalGuesses)));
+                              (1000 / (double) totalGuesses), score));
 
                         // "Reset Quiz" Button
                         builder.setPositiveButton(R.string.reset_quiz,
