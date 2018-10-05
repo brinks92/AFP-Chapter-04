@@ -51,12 +51,15 @@ public class MainActivityFragment extends Fragment {
    private SecureRandom random; // used to randomize the quiz
    private Handler handler; // used to delay loading next flag
    private Animation shakeAnimation; // animation for incorrect guess
+   private int score = 0; //first try
+   int tracker = 0;
 
    private LinearLayout quizLinearLayout; // layout that contains the quiz
    private TextView questionNumberTextView; // shows current question #
    private ImageView flagImageView; // displays a flag
    private LinearLayout[] guessLinearLayouts; // rows of answer Buttons
    private TextView answerTextView; // displays correct answer
+   private TextView First;
 
    // configures the MainActivityFragment when its View is created
    @Override
@@ -81,6 +84,9 @@ public class MainActivityFragment extends Fragment {
          (LinearLayout) view.findViewById(R.id.quizLinearLayout);
       questionNumberTextView =
          (TextView) view.findViewById(R.id.questionNumberTextView);
+
+      First = (TextView) view.findViewById(R.id.Try);
+
       flagImageView = (ImageView) view.findViewById(R.id.flagImageView);
       guessLinearLayouts = new LinearLayout[4];
       guessLinearLayouts[0] =
@@ -104,6 +110,8 @@ public class MainActivityFragment extends Fragment {
       // set questionNumberTextView's text
       questionNumberTextView.setText(
          getString(R.string.question, 1, FLAGS_IN_QUIZ));
+
+      First.setText(getString(R.string.FirstTry, 0));
       return view; // return the fragment's view for display
    }
 
@@ -183,6 +191,10 @@ public class MainActivityFragment extends Fragment {
       // display current question number
       questionNumberTextView.setText(getString(
          R.string.question, (correctAnswers + 1), FLAGS_IN_QUIZ));
+
+      First.setText(getString(R.string.FirstTry,score));
+
+     // .setText(getString(R.string.FirstTry , (score)));
 
       // extract the region from the next image's name
       String region = nextImage.substring(0, nextImage.indexOf('-'));
@@ -286,6 +298,9 @@ public class MainActivityFragment extends Fragment {
    private OnClickListener guessButtonListener = new OnClickListener() {
       @Override
       public void onClick(View v) {
+
+
+
          Button guessButton = ((Button) v);
          String guess = guessButton.getText().toString();
          String answer = getCountryName(correctAnswer);
@@ -294,6 +309,12 @@ public class MainActivityFragment extends Fragment {
          if (guess.equals(answer)) { // if the guess is correct
             ++correctAnswers; // increment the number of correct answers
 
+                  if(tracker == 0){
+                     score+= 1;
+                  }
+                  else {
+                     tracker = 0;
+                  }
             // display correct answer in green text
             answerTextView.setText(answer + "!");
             answerTextView.setTextColor(
@@ -334,6 +355,7 @@ public class MainActivityFragment extends Fragment {
                // use FragmentManager to display the DialogFragment
                quizResults.setCancelable(false);
                quizResults.show(getFragmentManager(), "quiz results");
+
             }
             else { // answer is correct but quiz is not over
                // load the next flag after a 2-second delay
@@ -345,8 +367,10 @@ public class MainActivityFragment extends Fragment {
                      }
                   }, 2000); // 2000 milliseconds for 2-second delay
             }
+
          }
          else { // answer was incorrect
+            tracker ++;
             flagImageView.startAnimation(shakeAnimation); // play shake
 
             // display "Incorrect!" in red
