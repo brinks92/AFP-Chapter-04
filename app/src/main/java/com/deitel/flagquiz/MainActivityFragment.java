@@ -160,7 +160,7 @@ public class MainActivityFragment extends Fragment {
       correctAnswers = 0; // reset the number of correct answers made
       totalGuesses = 0; // reset the total number of guesses the user made
       quizCountriesList.clear(); // clear prior list of quiz countries
-
+      score = 0;
       int flagCounter = 1;
       int numberOfFlags = fileNameList.size();
 
